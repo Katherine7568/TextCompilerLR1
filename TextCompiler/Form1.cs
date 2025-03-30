@@ -31,9 +31,9 @@ namespace TextCompiler
             openFileDialog1.Filter = filter;
             saveFileDialog1.Filter = filter;
             tabControl1.SelectedIndexChanged += TabControl1_SelectedIndexChanged;
-            this.MainMenuStrip = menuStrip1; 
+            this.MainMenuStrip = menuStrip1;
             Settings.LoadSettings();
-            if(Settings.language != "Русский")
+            if (Settings.language != "Русский")
                 Settings.UpdateLanguage(this);
             infoLabel = new ToolStripLabel();
             infoLabel.Text = (Settings.language == "Русский") ? "Текущие дата и время: " : "Current time and date: ";
@@ -49,7 +49,7 @@ namespace TextCompiler
 
             KeyDown += Keyboard;
         }
-        private void Keyboard(object sender, KeyEventArgs e) 
+        private void Keyboard(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F1)
             {
@@ -144,7 +144,7 @@ namespace TextCompiler
             {
                 Dock = DockStyle.Fill,
                 Orientation = Orientation.Vertical,
-                IsSplitterFixed = true,  
+                IsSplitterFixed = true,
             };
             int requiredWidth = TextRenderer.MeasureText("100", Settings.font).Width;
             splitContainer.SplitterDistance = requiredWidth;
@@ -233,7 +233,7 @@ namespace TextCompiler
 
         public void Save()
         {
-            if(tabControl1.TabPages.Count > 0) 
+            if (tabControl1.TabPages.Count > 0)
                 System.IO.File.WriteAllText(file.path, file.textBox.Text);
         }
 
@@ -330,7 +330,7 @@ namespace TextCompiler
 
         private void удалитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(file != null)
+            if (file != null)
                 file.textBox.SelectedText = "";
         }
 
@@ -356,15 +356,15 @@ namespace TextCompiler
 
         private void выходToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(tabControl1.TabPages.Count == 0)
+            if (tabControl1.TabPages.Count == 0)
                 this.Close();
-            else 
+            else
                 Exit();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            foreach(var tabPages in tabControl1.TabPages)
+            foreach (var tabPages in tabControl1.TabPages)
             {
                 Exit();
             }
@@ -372,7 +372,7 @@ namespace TextCompiler
 
         private void настройкиToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void tabControl1_DragEnter(object sender, DragEventArgs e)
@@ -449,7 +449,7 @@ namespace TextCompiler
             {
                 MessageBox.Show($"Произошла ошибка при изменении настроек: {ex.Message}");
             }
-            
+
         }
 
         private void видToolStripMenuItem_Click(object sender, EventArgs e)
@@ -471,6 +471,78 @@ namespace TextCompiler
             {
                 MessageBox.Show($"Произошла ошибка при изменении настроек: {ex.Message}");
             }
+        }
+
+        private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Help help = new Help();
+            help.ShowDialog();
+        }
+
+
+
+        private void RunFiniteStateMachine(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                MessageBox.Show("Пожалуйста, введите данные для обработки.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Очистка старых столбцов
+            dataGridView1.Columns.Clear();
+
+            // Добавление новых столбцов
+            dataGridView1.Columns.Add("ConditionalCode", "Условный код");
+            dataGridView1.Columns.Add("LexemeType", "Тип лексемы");
+            dataGridView1.Columns.Add("Lexeme", "Лексема");
+            dataGridView1.Columns.Add("Location", "Положение");
+
+            Scanner scanner = new Scanner();
+            var tokens = scanner.Scan(input);
+
+            foreach (var token in tokens)
+            {
+                dataGridView1.Rows.Add(token.Code, token.Type, token.Value, $"{token.Start}-{token.End}");
+            }
+
+            // Проверяем наличие ошибок
+            bool hasErrors = false;
+            foreach (var token in tokens)
+            {
+                if (token.Code == 14)
+                {
+                    hasErrors = true;
+                    MessageBox.Show($"Ошибка: Недопустимый символ '{token.Value}' в позиции {token.Start}-{token.End}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            if (!hasErrors)
+            {
+                MessageBox.Show("Разбор завершен без ошибок!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+
+
+
+
+        private void toolStripButton9_Click(object sender, EventArgs e)
+        {
+            if (file != null && file.textBox != null)
+            {
+                string input = file.textBox.Text;
+                RunFiniteStateMachine(input);
+            }
+            else
+            {
+                MessageBox.Show("Откройте файл перед обработкой.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }
