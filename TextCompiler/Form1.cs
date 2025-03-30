@@ -483,44 +483,66 @@ namespace TextCompiler
 
         private void RunFiniteStateMachine(string input)
         {
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                MessageBox.Show("Пожалуйста, введите данные для обработки.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
 
-            // Очистка старых столбцов
-            dataGridView1.Columns.Clear();
+            //if (string.IsNullOrWhiteSpace(input))
+            //{
+            //    MessageBox.Show("Пожалуйста, введите данные для обработки.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
 
-            // Добавление новых столбцов
-            dataGridView1.Columns.Add("ConditionalCode", "Условный код");
-            dataGridView1.Columns.Add("LexemeType", "Тип лексемы");
-            dataGridView1.Columns.Add("Lexeme", "Лексема");
-            dataGridView1.Columns.Add("Location", "Положение");
+            //dataGridView1.Columns.Clear();
+
+            //dataGridView1.Columns.Add("ConditionalCode", "Условный код");
+            //dataGridView1.Columns.Add("LexemeType", "Тип лексемы");
+            //dataGridView1.Columns.Add("Lexeme", "Лексема");
+            //dataGridView1.Columns.Add("Location", "Положение");
 
             Scanner scanner = new Scanner();
             var tokens = scanner.Scan(input);
 
-            foreach (var token in tokens)
-            {
-                dataGridView1.Rows.Add(token.Code, token.Type, token.Value, $"{token.Start}-{token.End}");
-            }
+            //foreach (var token in tokens)
+            //{
+            //    dataGridView1.Rows.Add(token.Code, token.Type, token.Value, $"{token.Start}-{token.End}");
+            //}
 
-            // Проверяем наличие ошибок
-            bool hasErrors = false;
-            foreach (var token in tokens)
+            //bool hasErrors = false;
+            //foreach (var token in tokens)
+            //{
+            //    if (token.Code == 14)
+            //    {
+            //        hasErrors = true;
+            //        MessageBox.Show($"Ошибка: Недопустимый символ '{token.Value}' в позиции {token.Start}-{token.End}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    }
+            //}
+
+            //if (!hasErrors)
+            //{
+            //    MessageBox.Show("Разбор завершен без ошибок!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //}
+
+
+            Parser parser = new Parser(tokens);
+            bool success = parser.Parse();
+
+            dataGridView1.Columns.Clear();
+            dataGridView1.Rows.Clear();
+            dataGridView1.Columns.Add("Fragment", "Неверный фрагмент");
+            dataGridView1.Columns.Add("Location", "Местоположение");
+
+            if (!success)
             {
-                if (token.Code == 14)
+                foreach (var error in parser.Errors)
                 {
-                    hasErrors = true;
-                    MessageBox.Show($"Ошибка: Недопустимый символ '{token.Value}' в позиции {token.Start}-{token.End}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    dataGridView1.Rows.Add(error.Fragment, error.Location);
                 }
+
+                MessageBox.Show($"Обнаружено ошибок: {parser.Errors.Count}", "Синтаксический анализ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                MessageBox.Show("Синтаксический анализ завершён без ошибок!", "Синтаксический анализ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            if (!hasErrors)
-            {
-                MessageBox.Show("Разбор завершен без ошибок!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
         }
 
 
