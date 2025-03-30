@@ -544,5 +544,18 @@ namespace TextCompiler
         {
 
         }
+
+        private void пускToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (file != null && file.textBox != null)
+            {
+                string input = file.textBox.Text;
+                RunFiniteStateMachine(input);
+            }
+            else
+            {
+                MessageBox.Show("Откройте файл перед обработкой.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }
