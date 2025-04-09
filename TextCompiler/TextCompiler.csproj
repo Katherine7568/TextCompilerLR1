@@ -166,5 +166,20 @@
   <ItemGroup>
     <None Include="Properties\image\icons8-код-100 %281%29.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\image\Рисунок5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\image\Рисунок4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\image\Рисунок3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\image\Рисунок2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\image\Рисунок1.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

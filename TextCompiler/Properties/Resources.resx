@@ -229,4 +229,19 @@
   <data name="icons8-код-100 (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>image\icons8-код-100 (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Рисунок1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>image\Рисунок1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Рисунок2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>image\Рисунок2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Рисунок3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>image\Рисунок3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Рисунок4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>image\Рисунок4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Рисунок5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>image\Рисунок5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

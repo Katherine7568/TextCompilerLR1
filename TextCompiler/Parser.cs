@@ -4,122 +4,224 @@ using System.Linq;
 
 namespace TextCompiler
 {
-    internal class Parser
+    public class SyntaxParser
     {
-        private List<Token> tokens;
-        private int currentIndex;
-        public List<(string Fragment, string Location)> Errors { get; private set; }
-        private bool hasError;
-
-        public Parser(List<Token> tokens)
+        public class SyntaxError
         {
-            this.tokens = tokens.Where(t => t.Code != 8).ToList(); // игнорируем пробелы
-            currentIndex = 0;
-            Errors = new List<(string, string)>();
-            hasError = false;
+            public string Message { get; set; }
+            public int Position { get; set; }
+            public int Line { get; set; }
         }
 
-        public bool Parse()
+        private static readonly HashSet<string> validTypes = new HashSet<string>
         {
-            try
+            "String", "u64", "i32", "f64", "bool"
+        };
+
+        private static readonly HashSet<char> validIdentChars =
+            new HashSet<char>("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_");
+
+        public List<SyntaxError> Parse(string input)
+        {
+            var errors = new List<SyntaxError>();
+            if (string.IsNullOrEmpty(input)) return errors;
+
+            int pos = 0;
+            int line = 1;
+
+            // 1. Проверяем ключевое слово 'struct'
+            ExpectKeyword("struct", ref pos, ref line, input, errors);
+
+            // 2. Проверяем пробел после 'struct'
+            ExpectWhitespace(ref pos, ref line, input, errors);
+
+            // 3. Проверяем имя структуры
+            ExpectIdentifier(ref pos, ref line, input, errors, "имя структуры");
+
+            // 4. Проверяем открывающую скобку '{'
+            ExpectChar('{', ref pos, ref line, input, errors);
+
+            // 5. Проверяем поля структуры
+            while (pos < input.Length && input[pos] != '}')
             {
-                Expect("struct");
-                ExpectIdentifier("Student");
-                ExpectSymbol("{");
-                ExpectIdentifier("name");
-                ExpectSymbol(":");
-                ExpectKeyword("String");
-                ExpectSymbol(",");
-                ExpectIdentifier("roll");
-                ExpectSymbol(":");
-                ExpectKeyword("u64");
-                ExpectSymbol(",");
-                ExpectIdentifier("dept");
-                ExpectSymbol(":");
-                ExpectKeyword("String");
-                ExpectSymbol(",");
-                ExpectSymbol("}");
-                ExpectSymbol(";");
-                return Errors.Count == 0;
+                SkipWhitespace(ref pos, ref line, input);
+                if (pos >= input.Length || input[pos] == '}') break;
+
+                // Запоминаем начало поля для восстановления
+                int fieldStart = pos;
+                int fieldLine = line;
+
+                // 5.1. Имя поля
+                ExpectIdentifier(ref pos, ref line, input, errors, "имя поля");
+
+                // 5.2. Двоеточие
+                if (pos < input.Length) ExpectChar(':', ref pos, ref line, input, errors);
+
+                // 5.3. Тип поля
+                if (pos < input.Length) ExpectType(ref pos, ref line, input, errors);
+
+                // Пропускаем пробелы перед проверкой разделителя
+                SkipWhitespace(ref pos, ref line, input);
+
+                // Проверяем разделитель
+                if (pos < input.Length && input[pos] != ',' && input[pos] != '}')
+                {
+                    AddError($"Ожидается ',' или '}}'", pos, line,
+                            pos < input.Length ? input[pos].ToString() : "EOF", errors);
+
+                    // Пытаемся найти следующий разделитель
+                    while (pos < input.Length && input[pos] != ',' && input[pos] != '}')
+                    {
+                        if (input[pos] == '\n') line++;
+                        pos++;
+                    }
+                }
+
+                if (pos < input.Length && input[pos] == ',')
+                {
+                    pos++; // Переходим к следующему полю
+                }
             }
-            catch
+
+            // 6. Проверяем закрывающую скобку '}'
+            ExpectChar('}', ref pos, ref line, input, errors);
+
+            // 7. Проверяем точку с запятой ';'
+            ExpectChar(';', ref pos, ref line, input, errors);
+
+            return errors;
+        }
+
+        // Методы проверки теперь только добавляют ошибки и продвигают позицию
+        private void ExpectKeyword(string keyword, ref int pos, ref int line,
+                                 string input, List<SyntaxError> errors)
+        {
+            SkipWhitespace(ref pos, ref line, input);
+
+            int start = pos;
+            while (pos < input.Length && char.IsLetter(input[pos]))
+                pos++;
+
+            string word = pos <= input.Length ? input.Substring(start, pos - start) : "";
+            if (word != keyword)
             {
-                return false;
+                AddError($"Ожидается ключевое слово '{keyword}'", start, line, word, errors);
             }
         }
 
-        private void Expect(string value)
+        private void ExpectWhitespace(ref int pos, ref int line,
+                                    string input, List<SyntaxError> errors)
         {
-            if (hasError) return;
-
-            if (currentIndex >= tokens.Count || tokens[currentIndex].Value != value)
+            if (pos >= input.Length || !char.IsWhiteSpace(input[pos]))
             {
-                AddError(value);
+                AddError("Ожидается пробел", pos, line,
+                        pos < input.Length ? input[pos].ToString() : "EOF", errors);
             }
             else
             {
-                currentIndex++;
+                pos++;
             }
         }
 
-        private void ExpectSymbol(string symbol)
+        private void ExpectIdentifier(ref int pos, ref int line,
+                                   string input, List<SyntaxError> errors,
+                                   string expected)
         {
-            if (hasError) return;
+            SkipWhitespace(ref pos, ref line, input);
 
-            if (currentIndex >= tokens.Count || tokens[currentIndex].Value != symbol)
+            int start = pos;
+            while (pos < input.Length && validIdentChars.Contains(input[pos]))
+                pos++;
+
+            if (start == pos)
             {
-                AddError(symbol);
+                AddError($"Ожидается {expected}", pos, line,
+                        pos < input.Length ? input[pos].ToString() : "EOF", errors);
             }
-            else
+            else if (pos < input.Length && !char.IsWhiteSpace(input[pos]) &&
+                     input[pos] != ':' && input[pos] != '{' && input[pos] != '}')
             {
-                currentIndex++;
+                AddError("Недопустимый символ в идентификаторе", pos, line,
+                        input[pos].ToString(), errors);
             }
         }
 
-        private void ExpectKeyword(string keyword)
+        private void ExpectType(ref int pos, ref int line,
+                              string input, List<SyntaxError> errors)
         {
-            if (hasError) return;
+            SkipWhitespace(ref pos, ref line, input);
 
-            if (currentIndex >= tokens.Count || tokens[currentIndex].Value != keyword)
+            int start = pos;
+            while (pos < input.Length && char.IsLetterOrDigit(input[pos]))
+                pos++;
+
+            string type = pos <= input.Length ? input.Substring(start, pos - start) : "";
+            if (!validTypes.Contains(type))
             {
-                AddError(keyword);
-            }
-            else
-            {
-                currentIndex++;
+                AddError("Ожидается тип поля (String, u64, i32, f64, bool)",
+                        start, line, type, errors);
             }
         }
 
-        private void ExpectIdentifier(string expected = null)
+        private void ExpectChar(char expected, ref int pos, ref int line,
+                              string input, List<SyntaxError> errors)
         {
-            if (hasError) return;
+            SkipWhitespace(ref pos, ref line, input);
 
-            if (currentIndex >= tokens.Count || tokens[currentIndex].Code != 7)
+            if (pos >= input.Length || input[pos] != expected)
             {
-                AddError(expected ?? "идентификатор");
+                AddError($"Ожидается символ '{expected}'", pos, line,
+                        pos < input.Length ? input[pos].ToString() : "EOF", errors);
             }
             else
             {
-                currentIndex++;
+                pos++;
             }
         }
 
-        private void AddError(string expected)
+        private void SkipWhitespace(ref int pos, ref int line, string input)
         {
-            if (hasError) return;
-
-            if (currentIndex < tokens.Count)
+            while (pos < input.Length)
             {
-                var token = tokens[currentIndex];
-                string location = $"с {token.Start + 1} по {token.End + 1} символ";
-                Errors.Add(($"Ожидалось: '{expected}', получено: '{token.Value}'", location));
+                if (input[pos] == '\n')
+                {
+                    line++;
+                    pos++;
+                }
+                else if (char.IsWhiteSpace(input[pos]))
+                {
+                    pos++;
+                }
+                else
+                {
+                    break;
+                }
             }
-            else
-            {
-                Errors.Add(($"Ожидалось: '{expected}', но достигнут конец ввода", "в конце строки"));
-            }
+        }
 
-            hasError = true; // Останавливаем после первой ошибки
+        private void RecoverTo(ref int pos, ref int line, string input, char[] stopChars)
+        {
+            while (pos < input.Length && !stopChars.Contains(input[pos]))
+            {
+                if (input[pos] == '\n') line++;
+                pos++;
+            }
+        }
+
+        private void RecoverToEnd(ref int pos, ref int line, string input)
+        {
+            pos = input.Length;
+        }
+
+        private void AddError(string message, int position, int line,
+                            string found, List<SyntaxError> errors)
+        {
+            errors.Add(new SyntaxError
+            {
+                Message = message,
+                Position = position,
+                Line = line,
+            });
         }
     }
 }

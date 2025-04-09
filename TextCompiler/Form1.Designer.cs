@@ -262,6 +262,7 @@
             this.постановкаЗадачиToolStripMenuItem.Name = "постановкаЗадачиToolStripMenuItem";
             this.постановкаЗадачиToolStripMenuItem.Size = new System.Drawing.Size(363, 26);
             this.постановкаЗадачиToolStripMenuItem.Text = "Постановка задачи";
+            this.постановкаЗадачиToolStripMenuItem.Click += new System.EventHandler(this.постановкаЗадачиToolStripMenuItem_Click);
             // 
             // грамматикаToolStripMenuItem
             // 
@@ -269,6 +270,7 @@
             this.грамматикаToolStripMenuItem.Name = "грамматикаToolStripMenuItem";
             this.грамматикаToolStripMenuItem.Size = new System.Drawing.Size(363, 26);
             this.грамматикаToolStripMenuItem.Text = "Грамматика";
+            this.грамматикаToolStripMenuItem.Click += new System.EventHandler(this.грамматикаToolStripMenuItem_Click);
             // 
             // классификацияГрамматикиToolStripMenuItem
             // 
@@ -276,6 +278,7 @@
             this.классификацияГрамматикиToolStripMenuItem.Name = "классификацияГрамматикиToolStripMenuItem";
             this.классификацияГрамматикиToolStripMenuItem.Size = new System.Drawing.Size(363, 26);
             this.классификацияГрамматикиToolStripMenuItem.Text = "Классификация грамматики";
+            this.классификацияГрамматикиToolStripMenuItem.Click += new System.EventHandler(this.классификацияГрамматикиToolStripMenuItem_Click);
             // 
             // методАнализаToolStripMenuItem
             // 
@@ -283,6 +286,7 @@
             this.методАнализаToolStripMenuItem.Name = "методАнализаToolStripMenuItem";
             this.методАнализаToolStripMenuItem.Size = new System.Drawing.Size(363, 26);
             this.методАнализаToolStripMenuItem.Text = "Метод анализа";
+            this.методАнализаToolStripMenuItem.Click += new System.EventHandler(this.методАнализаToolStripMenuItem_Click);
             // 
             // диагностикаИНейтрализацияОшибокToolStripMenuItem
             // 
@@ -297,6 +301,7 @@
             this.тестовыйПримерToolStripMenuItem.Name = "тестовыйПримерToolStripMenuItem";
             this.тестовыйПримерToolStripMenuItem.Size = new System.Drawing.Size(363, 26);
             this.тестовыйПримерToolStripMenuItem.Text = "Тестовый пример";
+            this.тестовыйПримерToolStripMenuItem.Click += new System.EventHandler(this.тестовыйПримерToolStripMenuItem_Click);
             // 
             // списокЛитературыToolStripMenuItem
             // 
@@ -304,6 +309,7 @@
             this.списокЛитературыToolStripMenuItem.Name = "списокЛитературыToolStripMenuItem";
             this.списокЛитературыToolStripMenuItem.Size = new System.Drawing.Size(363, 26);
             this.списокЛитературыToolStripMenuItem.Text = "Список литературы";
+            this.списокЛитературыToolStripMenuItem.Click += new System.EventHandler(this.списокЛитературыToolStripMenuItem_Click);
             // 
             // исходныйКодПрограммыToolStripMenuItem
             // 
@@ -311,6 +317,7 @@
             this.исходныйКодПрограммыToolStripMenuItem.Name = "исходныйКодПрограммыToolStripMenuItem";
             this.исходныйКодПрограммыToolStripMenuItem.Size = new System.Drawing.Size(363, 26);
             this.исходныйКодПрограммыToolStripMenuItem.Text = "Исходный код программы";
+            this.исходныйКодПрограммыToolStripMenuItem.Click += new System.EventHandler(this.исходныйКодПрограммыToolStripMenuItem_Click);
             // 
             // пускToolStripMenuItem
             // 
@@ -522,7 +529,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl2);
             this.splitContainer1.Size = new System.Drawing.Size(941, 586);
-            this.splitContainer1.SplitterDistance = 258;
+            this.splitContainer1.SplitterDistance = 257;
             this.splitContainer1.TabIndex = 2;
             // 
             // tabControl1
@@ -534,7 +541,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(941, 258);
+            this.tabControl1.Size = new System.Drawing.Size(941, 257);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.DragDrop += new System.Windows.Forms.DragEventHandler(this.tabControl1_DragDrop);
             this.tabControl1.DragEnter += new System.Windows.Forms.DragEventHandler(this.tabControl1_DragEnter);
@@ -549,7 +556,7 @@
             this.tabControl2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(941, 324);
+            this.tabControl2.Size = new System.Drawing.Size(941, 325);
             this.tabControl2.TabIndex = 4;
             // 
             // tabPage1
@@ -559,7 +566,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage1.Size = new System.Drawing.Size(933, 292);
+            this.tabPage1.Size = new System.Drawing.Size(933, 293);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Список ошибок";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -579,7 +586,7 @@
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dataGridView1.Size = new System.Drawing.Size(927, 288);
+            this.dataGridView1.Size = new System.Drawing.Size(927, 289);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
@@ -611,7 +618,7 @@
             this.tabPage2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage2.Size = new System.Drawing.Size(933, 292);
+            this.tabPage2.Size = new System.Drawing.Size(933, 291);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Вывод";
             this.tabPage2.UseVisualStyleBackColor = true;
