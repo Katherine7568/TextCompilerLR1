@@ -181,5 +181,14 @@
   <ItemGroup>
     <None Include="Properties\image\Рисунок1.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\image\Рисунок8.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\image\Рисунок7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\image\Рисунок6.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
