@@ -2,51 +2,57 @@
 
 ## Вариант 8: Объявление и определение структуры
 
+```rust
 struct Student {
     name: String,
     roll: u64,
     dept: String,
 };
+```
 
 ## Примеры допустимых структур
 
 ### 1. Структура с полями базовых типов
 
+```rust
 struct Student {
     name: String,
     roll: u64,
     dept: String,
 };
+```
 
 ### 2. Структура с числовыми полями
 
+```rust
 struct Point {
     x: i32,
     y: i32,
 };
-
+```
 
 ## Разработанная грамматика
 
 ```
-1. <Def>       → "struct " <STRUCT>
-2. <STRUCT>    → " " <Name> 
-3. <Name>      → <Letter> <NameRem>
-4. <NameRem>   → <Letter> <NameRem>
-               | <Digit> <NameRem>
-               | "{" <x>
-5. <x>         → <Letter> <XRem>
-6. <XRem>      → <Letter> <XRem>
-               | <Digit> <XRem>
-               | ":" <y> 
-7. <y>         → <Type> <Field> 
-8. <Field>     → "," <x>
-               | "}" <End> 
-9. <End>       → ";" 
-10. <Type>      → "String" | "u64" | "i32" | "f64" | "bool"
-11. <Letter>    → [a-zA-Z]
-12. <Digit>     → [0-9]
+<Def>       → "struct " <STRUCT>
+<STRUCT>    → ' ' <Name> 
+<Name>      → <Letter> <NameRem>
+<NameRem>   → <Letter> <NameRem>
+            | <Digit> <NameRem>
+            | '{' <x>
+<x>         → <Letter> <XRem>
+<XRem>      → <Letter> <XRem>
+            | <Digit> <XRem>
+            | ':' <y> 
+<y>         → <Type> <Field> 
+<Field>     → ',' <x>
+            | '}' <End> 
+<End>       → ";" 
+<Type>      → "String" | "u64" | "i32" | "f64" | "bool"
+<Letter>    → [a-zA-Z]
+<Digit>     → [0-9]
 ```
+
 
 ## Классификация грамматики
 
